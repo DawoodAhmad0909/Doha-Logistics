@@ -1,7 +1,8 @@
-product_id,product_name,category,unit_weight,movement_qty,recommended_storage_zone
-5,"HVAC Filter MERV-13",HVAC,1.20,0,"Back shelves (Slow-moving, light)"
-4,"Dates - Premium Grade","Food Products",5.00,0,"Back shelves (Slow-moving, light)"
-2,"Copper Wire 2.5mm",Electrical,5.50,0,"Back shelves (Slow-moving, light)"
-6,"Bottled Water 500ml",Beverages,12.00,0,"Far back or high racks (Slow-moving, heavy)"
-3,"Medical Oxygen Tank","Medical Supplies",15.00,0,"Far back or high racks (Slow-moving, heavy)"
-1,"Portland Cement 50kg","Construction Materials",50.00,0,"Far back or high racks (Slow-moving, heavy)"
+warehouse_name,product_name,category,total_sold_qty,total_quantity_on_hand,total_weight_kg,movement_ratio,layout_priority
+"Construction Materials Yard","Portland Cement 50kg","Construction Materials",NULL,1800,90000.00,NULL,"Low Priority"
+"Doha Central Warehouse","Portland Cement 50kg","Construction Materials",NULL,2500,125000.00,NULL,"Low Priority"
+"Doha Central Warehouse","Copper Wire 2.5mm",Electrical,NULL,350,1925.00,NULL,"Low Priority"
+"Doha Central Warehouse","HVAC Filter MERV-13",HVAC,NULL,280,336.00,NULL,"Low Priority"
+"Food Distribution Center","Bottled Water 500ml",Beverages,NULL,1200,14400.00,NULL,"Low Priority"
+"Food Distribution Center","Dates - Premium Grade","Food Products",NULL,750,3750.00,NULL,"Low Priority"
+"Medical Storage Facility","Medical Oxygen Tank","Medical Supplies",NULL,120,1800.00,NULL,"Low Priority"

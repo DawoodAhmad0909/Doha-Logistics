@@ -1,1 +1,1 @@
-product_name,category,total_on_hand,avg_daily_demand,lead_time_days,projected_demand_during_lead_time,likely_stockout
+product_name,category,lead_time_days,avg_daily_demand,total_quantity_on_hand,days_of_stock_left,stockout_status

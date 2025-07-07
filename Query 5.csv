@@ -1,5 +1,5 @@
-location,capacity_sqft,used_space,utilization_percent
-"Industrial Area, Doha",50000,3130,6.26
-"Al Wakra",15000,120,0.80
-"Ras Abu Aboud",30000,1950,6.50
-"Umm Salal",75000,1800,2.40
+warehouse_name,location,total_capacity,estimated_used_space,utilization_percentage
+"Doha Central Warehouse","Industrial Area, Doha",50000,20715.32,41.43
+"Construction Materials Yard","Umm Salal",75000,13500.00,18.00
+"Food Distribution Center","Ras Abu Aboud",30000,1902.00,5.34
+"Medical Storage Facility","Al Wakra",15000,450.00,1.80

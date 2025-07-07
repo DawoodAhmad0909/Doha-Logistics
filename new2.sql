@@ -224,6 +224,9 @@ INSERT INTO transportation(vehicle_type,registration_number,capacity_kg,driver_n
     ('Refrigerated Van', 'Q 67890', 5000.00, 'Ahmed Hassan', '+97433225566', '2023-06-01', 'In Transit'), 
     ('Box Truck', 'Q 54321', 10000.00, 'Omar Mahmoud', '+97433336677', '2023-04-15', 'Maintenance');
 
+-- KEY Queries
+
+-- 1. List all local Qatari suppliers with their total purchase order values in the last 6 months, sorted by highest spend.
 SELECT 
 	s.supplier_name, SUM(po.total_amount) AS total_spent 
 FROM suppliers s 
@@ -233,6 +236,7 @@ WHERE
     AND po.order_date >= CURDATE() - INTERVAL 6 MONTH 
 GROUP BY s.supplier_name ORDER BY total_spent DESC;
 
+-- 2. Identify suppliers with delayed shipments (actual delivery date > expected delivery date) and calculate average delay days. 
 SELECT s.supplier_name, AVG(DATEDIFF(sh.arrival_date, po.expected_delivery_date)) AS avg_delay_days 
 FROM shipments sh 
 JOIN purchase_orders po ON sh.po_id = po.po_id 
@@ -242,6 +246,7 @@ WHERE
     AND sh.arrival_date > po.expected_delivery_date 
 GROUP BY s.supplier_name;
 
+-- 3. Compare procurement costs between local, GCC, and international suppliers by product category. 
 SELECT 
     s.supplier_category,p.category AS product_category,
     ROUND(SUM(pi.quantity * pi.unit_price), 2) AS total_procurement_cost,
@@ -253,6 +258,7 @@ JOIN products p ON pi.product_id = p.product_id
 GROUP BY s.supplier_category, p.category
 ORDER BY s.supplier_category, total_procurement_cost DESC;
     
+-- 4. Show products currently below minimum stock levels across all warehouses. 
 SELECT 
     p.product_name,p.min_stock_level,
     SUM(i.quantity_on_hand) AS total_on_hand,
@@ -263,6 +269,7 @@ GROUP BY p.product_id, p.product_name, p.category, p.min_stock_level
 HAVING total_on_hand < p.min_stock_level
 ORDER BY shortfall DESC;
 
+-- 5. Calculate warehouse capacity utilization (used vs. available space) by location. 
 SELECT 
     w.warehouse_name,
     w.location,
@@ -296,6 +303,7 @@ LEFT JOIN products p ON i.product_id = p.product_id
 GROUP BY w.warehouse_id, w.warehouse_name, w.location, w.capacity_sqft
 ORDER BY utilization_percentage DESC;
 
+-- 6. Identify slow-moving inventory (products with no sales in last 90 days but stock > 50 units). 
 WITH recent_sales AS (
     SELECT DISTINCT si.product_id
     FROM so_items si
@@ -319,6 +327,7 @@ WHERE
     AND ss.total_quantity > 50
 ORDER BY ss.total_quantity DESC;
     
+-- 7. List top 5 customers by total spend, including their preferred payment methods. 
 SELECT c.customer_name, so.payment_method, SUM(so.total_amount) AS total_spent 
 FROM customers c 
 JOIN sales_orders so ON c.customer_id = so.customer_id 
@@ -326,6 +335,7 @@ GROUP BY c.customer_id ,so.payment_method
 ORDER BY total_spent DESC 
 LIMIT 5;
 
+-- 8. Analyze sales trends for construction materials before/during/after major projects (e.g., World Cup 2022). 
 SELECT 
 	CASE WHEN so.order_date < '2022-01-01' THEN 'Before WC' 
     WHEN so.order_date BETWEEN '2022-11-01' AND '2022-12-31' THEN 'During WC' 
@@ -337,6 +347,7 @@ JOIN products p ON soi.product_id = p.product_id
 WHERE p.category = 'Construction Materials' 
 GROUP BY phase;
 
+-- 10. Compare on-time delivery rates between different shipping methods. 
 SELECT 
 	po.shipping_method, COUNT(*) AS total_orders, 
 	SUM(CASE WHEN sh.arrival_date <= po.expected_delivery_date THEN 1 ELSE 0 END) AS on_time,
@@ -345,6 +356,7 @@ FROM purchase_orders po
 JOIN shipments sh ON po.po_id = sh.po_id 
 GROUP BY po.shipping_method;
 
+-- 11. Calculate average shipping costs as % of order value by supplier origin. 
 SELECT 
     s.supplier_category,
     ROUND(AVG(sh.shipping_cost), 2) AS total_shipping_cost,
@@ -356,6 +368,7 @@ JOIN suppliers s ON po.supplier_id = s.supplier_id
 GROUP BY s.supplier_category
 ORDER BY shipping_cost_percentage DESC;
     
+-- 13. Calculate inventory turnover ratio by product category (COGS / average inventory).
 WITH avg_costs AS (
     SELECT 
         pi.product_id,
@@ -393,6 +406,7 @@ FROM cogs_by_category c
 JOIN inventory_value_by_category iv ON c.category = iv.category
 ORDER BY inventory_turnover_ratio DESC;
 
+-- 14. Show monthly purchase order values vs. sales order values to identify cash flow gaps. 
 SELECT 
     month,
     SUM(total_purchase_orders) AS total_purchase_orders,
@@ -419,6 +433,7 @@ FROM (
 GROUP BY month
 ORDER BY month;
 
+-- 15. Rank products by profitability (sales price vs. procurement cost) for the last quarter. 
 WITH recent_sales AS (
     SELECT 
         si.product_id,
@@ -452,6 +467,7 @@ JOIN products p ON rs.product_id = p.product_id
 ORDER BY profit DESC
 LIMIT 10;
 
+-- 16. Predict stockouts using lead times and current demand patterns.
 WITH daily_demand AS (
     SELECT 
         si.product_id,SUM(si.quantity) / 30 AS avg_daily_demand
@@ -480,6 +496,7 @@ JOIN daily_demand d ON p.product_id = d.product_id
 JOIN stock_summary s ON p.product_id = s.product_id
 ORDER BY days_of_stock_left ASC;
     
+-- 17. Optimize warehouse layouts based on product movement frequency and weight. 
 WITH product_movement AS (
     SELECT 
         si.product_id,
@@ -516,6 +533,7 @@ JOIN warehouses w ON i.warehouse_id = w.warehouse_id
 LEFT JOIN product_movement pm ON i.product_id = pm.product_id
 ORDER BY w.warehouse_name, layout_priority DESC, i.total_weight_kg DESC;
     
+-- 18. Analyze customs clearance bottlenecks for international shipments. 
 SELECT 
     s.supplier_name,po.po_id,sh.carrier_name,sh.tracking_number,sh.departure_date,sh.arrival_date,
     DATEDIFF(CURDATE(), sh.arrival_date) AS days_since_arrival,sh.customs_cleared,
