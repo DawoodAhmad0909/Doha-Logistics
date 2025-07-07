@@ -1,14 +1,33 @@
 # Doha Logistics
- Overview 
- Objectives 
- Database Creation 
+## Overview 
+This database models a comprehensive supply chain and inventory system for a Qatari organization, covering end-to-end logistics — from procurement to order fulfillment. It includes detailed information on:
 
+ •Suppliers categorized by region (Local, GCC, International)
+
+ •Products with attributes like unit weight, category, hazardous status, and stock thresholds
+
+ •Warehouses with capacity and environmental control details
+
+ •Inventory levels across warehouses
+
+ •Purchase Orders (POs) and corresponding shipments from suppliers
+
+ •Sales Orders (SOs) to customers and related order items
+
+ •Transportation resources with driver info and vehicle status
+
+
+Additionally, the database supports advanced analytical queries for inventory health, sales trends, supplier reliability, and warehouse efficiency.
+## Objectives 
+To design and implement a comprehensive Qatar Supply Chain Management System that optimizes procurement, inventory, logistics, and distribution operations through data-driven insights, ensuring cost efficiency, timely deliveries, and compliance with Qatar's economic and regulatory requirements.
+## Database Creation 
+``` sql
 CREATE DATABASE DLT_db;
 USE DLT_db;
-
- Table Creation
- Table:
- 
+```
+## Table Creation
+### Table:
+``` sql 
 CREATE TABLE suppliers( 
         supplier_id INT PRIMARY KEY AUTO_INCREMENT,
     supplier_name TEXT, 
@@ -24,9 +43,9 @@ CREATE TABLE suppliers(
 );
 
 SELECT * FROM suppliers;
-
- Table:products
-
+```
+### Table:products
+``` sql
 CREATE TABLE products( 
         product_id INT PRIMARY KEY AUTO_INCREMENT, 
     product_name TEXT, description TEXT, 
@@ -39,15 +58,9 @@ CREATE TABLE products(
 );
 
 SELECT * FROM products;
-
-INSERT INTO products(product_name,description,category,unit_of_measure,unit_weight,hazardous_material,min_stock_level,lead_time_days) VALUES 
-        ('Portland Cement 50kg', 'Standard construction cement', 'Construction Materials', 'Bag', 50.00, FALSE, 1000, 7), 
-    ('Copper Wire 2.5mm', 'Electrical wiring 100m rolls', 'Electrical', 'Roll', 5.50, FALSE, 200, 14), 
-    ('Medical Oxygen Tank', '10L industrial oxygen cylinder', 'Medical Supplies', 'Unit', 15.00, TRUE, 50, 21), 
-    ('Dates - Premium Grade', 'Qatari premium dates 5kg box', 'Food Products', 'Box', 5.00, FALSE, 300, 3), 
-    ('HVAC Filter MERV-13', 'Commercial HVAC filters', 'HVAC', 'Piece', 1.20, FALSE, 150, 10), 
-    ('Bottled Water 500ml', 'Pack of 24 bottles', 'Beverages', 'Case', 12.00, FALSE, 500, 2);
-
+```
+### Table:warehouses
+``` sql
 CREATE TABLE warehouses( 
         warehouse_id INT PRIMARY KEY AUTO_INCREMENT, 
     warehouse_name TEXT, 
@@ -59,13 +72,9 @@ CREATE TABLE warehouses(
 );
 
 SELECT * FROM warehouses;
-
-INSERT INTO warehouses(warehouse_name,location,capacity_sqft,temperature_controlled,manager,contact_number) VALUES 
-        ('Doha Central Warehouse', 'Industrial Area, Doha', 50000, FALSE, 'Omar Al-Suwaidi', '+97433112233'), 
-    ('Medical Storage Facility', 'Al Wakra', 15000, TRUE, 'Dr. Aisha Mohammed', '+97433224455'), 
-    ('Food Distribution Center', 'Ras Abu Aboud', 30000, TRUE, 'Khalid Al-Mohannadi', '+97433446677'), 
-    ('Construction Materials Yard', 'Umm Salal', 75000, FALSE, 'Jassim Al-Hajri', '+97433558899');
-
+```
+### Table:inventory
+``` sql
 CREATE TABLE inventory( 
         inventory_id INT PRIMARY KEY AUTO_INCREMENT, 
         product_id INT,
@@ -76,16 +85,9 @@ CREATE TABLE inventory(
 );
 
 SELECT * FROM inventory;
-
-INSERT INTO inventory(product_id,warehouse_id,quantity_on_hand,last_stock_update) VALUES 
-        (1, 1, 2500, '2023-06-15 08:30:00'), 
-    (1, 4, 1800, '2023-06-14 16:45:00'), 
-    (2, 1, 350, '2023-06-15 09:15:00'), 
-    (3, 2, 120, '2023-06-13 11:20:00'), 
-    (4, 3, 750, '2023-06-15 10:00:00'), 
-    (5, 1, 280, '2023-06-14 14:30:00'), 
-    (6, 3, 1200, '2023-06-15 07:45:00');
-
+```
+### Table:purchase_orders
+``` sql
 CREATE TABLE purchase_orders( 
         po_id INT PRIMARY KEY AUTO_INCREMENT, 
     supplier_id INT, 
@@ -98,13 +100,9 @@ CREATE TABLE purchase_orders(
 );
 
 SELECT * FROM purchase_orders;
-
-INSERT INTO purchase_orders(supplier_id,order_date,status,total_amount,payment_terms,shipping_method) VALUES 
-        (1, '2023-06-01', '2023-06-08', 'Delivered', 125000.00, 'Net 30', 'Local Truck'), 
-    (3, '2023-06-05', '2023-06-08', 'Shipped', 87500.00, 'Net 45', 'Refrigerated Truck'), 
-    (2, '2023-06-10', '2023-06-24', 'Approved', 42000.00, 'LC at Sight', 'Sea Freight'), 
-    (5, '2023-06-12', '2023-07-03', 'Draft', 65000.00, 'Net 60', 'Air Freight');
-
+```
+### Table:po_items
+``` sql
 CREATE TABLE po_items( 
         po_item_id INT PRIMARY KEY AUTO_INCREMENT, 
     po_id INT, 
@@ -116,15 +114,9 @@ CREATE TABLE po_items(
 );
 
 SELECT * FROM po_items;
-
-INSERT INTO po_items(po_id,product_id,quantity,unit_price) VALUES 
-        (1, 1, 2000, 25.00),
-    (1, 5, 100, 85.00), 
-    (2, 4, 1500, 35.00), 
-    (2, 6, 500, 15.00), 
-    (3, 2, 50, 420.00), 
-    (4, 3, 80, 550.00);
-
+```
+### Table:shipments
+``` sql
 CREATE TABLE shipments( 
         shipment_id INT PRIMARY KEY AUTO_INCREMENT, 
     po_id INT, 
@@ -137,12 +129,9 @@ CREATE TABLE shipments(
 );
 
 SELECT * FROM shipments;
-
-INSERT INTO shipments(po_id,carrier_name,tracking_number,departure_date,arrival_date,shipping_cost,customs_cleared) VALUES 
-        (1, 'Qatar Transport', 'QTR20230601-001', '2023-06-01', '2023-06-07', 1200.00, TRUE), 
-    (2, 'Gulf Cold Chain', 'GCC20230605-045', '2023-06-05', NULL, 850.00, FALSE), 
-    (3, 'Maersk Line', 'MAE123456789', '2023-06-15', NULL, 4200.00, FALSE);
-
+```
+### Table:customers
+``` sql
 CREATE TABLE customers( 
         customer_id INT PRIMARY KEY AUTO_INCREMENT, 
     customer_name TEXT, 
@@ -153,14 +142,9 @@ CREATE TABLE customers(
 );
 
 SELECT * FROM customers;
-
-INSERT INTO customers(customer_name,contact_person,email,phone,address,customer_type) VALUES 
-        ('Qatar Construction Co.', 'Abdullah Al-Kuwari', 'procurement@qatarconstruction.com', '+97444332211', 'West Bay, Doha', 'Wholesale'), 
-    ('Hamad Medical Corporation', 'Dr. Fatima Al-Sada', 'supplychain@hmc.org.qa', '+97444887766', 'Al Rayyan Road, Doha', 'Government'), 
-    ('Al Sultan Restaurant Group', 'Hassan Sultan', 'hsultan@alsultan.com', '+97455664433', 'The Pearl, Doha', 'Hospitality'), 
-    ('Doha Electronics', 'Rajiv Patel', 'purchasing@dohaelectronics.qa', '+97444221133', 'Salwa Road, Doha', 'Retail'), 
-    ('Qatar Ministry of Education', 'Mohammed Al-Emadi', 'moeprocurement@edu.gov.qa', '+97444998877', 'Al Dafna, Doha', 'Government');
-
+```
+### Table:sales_orders
+``` sql
 CREATE TABLE sales_orders( 
         so_id INT PRIMARY KEY AUTO_INCREMENT, 
     customer_id INT, 
@@ -172,13 +156,9 @@ CREATE TABLE sales_orders(
 );
 
 SELECT * FROM sales_orders;
-
-INSERT INTO sales_orders(customer_id,order_date,required_date,status,total_amount,payment_method) VALUES 
-        (2, '2023-06-05', '2023-06-07', 'Delivered', 42000.00, 'Bank Transfer'), 
-    (1, '2023-06-08', '2023-06-12', 'Processing', 187500.00, 'Letter of Credit'), 
-    (3, '2023-06-10', '2023-06-15', 'New', 6250.00, 'Credit Card'), 
-    (4, '2023-06-12', '2023-06-14', 'Shipped', 8400.00, 'Bank Transfer');
-
+```
+### Table:so_items
+``` sql
 CREATE TABLE so_items( 
         so_item_id INT PRIMARY KEY AUTO_INCREMENT, 
     so_id INT, 
@@ -190,14 +170,9 @@ CREATE TABLE so_items(
 );
 
 SELECT * FROM so_items;
-
-INSERT INTO so_items(so_id,product_id,quantity,unit_price) VALUES 
-        (1, 3, 60, 700.00), 
-    (2, 1, 5000, 30.00), 
-    (2, 5, 125, 90.00), 
-    (3, 4, 25, 250.00), 
-    (4, 2, 20, 420.00);
-
+```
+### Table:transportation
+``` sql
 CREATE TABLE transportation( 
         transport_id INT PRIMARY KEY AUTO_INCREMENT, 
     vehicle_type TEXT, 
@@ -210,15 +185,11 @@ CREATE TABLE transportation(
 );
 
 SELECT * FROM transportation;
+```
+## KEY Queries
 
-INSERT INTO transportation(vehicle_type,registration_number,capacity_kg,driver_name,driver_contact,last_maintenance_date,status) VALUES 
-        ('Flatbed Truck', 'Q 12345', 20000.00, 'Mohammed Ali', '+97433114455', '2023-05-20', 'Available'), 
-    ('Refrigerated Van', 'Q 67890', 5000.00, 'Ahmed Hassan', '+97433225566', '2023-06-01', 'In Transit'), 
-    ('Box Truck', 'Q 54321', 10000.00, 'Omar Mahmoud', '+97433336677', '2023-04-15', 'Maintenance');
-
--- KEY Queries
-
--- 1. List all local Qatari suppliers with their total purchase order values in the last 6 months, sorted by highest spend.
+#### 1. List all local Qatari suppliers with their total purchase order values in the last 6 months, sorted by highest spend.
+``` sql
 SELECT 
         s.supplier_name, SUM(po.total_amount) AS total_spent 
 FROM suppliers s 
@@ -226,16 +197,18 @@ JOIN purchase_orders po ON s.supplier_id = po.supplier_id
 WHERE 
         s.supplier_category = 'Local' AND po.order_date >= CURDATE() - INTERVAL 6 MONTH 
 GROUP BY s.supplier_name ORDER BY total_spent DESC;
-
--- 2. Identify suppliers with delayed shipments (actual delivery date > expected delivery date) and calculate average delay days. 
+```
+#### 2. Identify suppliers with delayed shipments (actual delivery date > expected delivery date) and calculate average delay days. 
+``` sql
 SELECT s.supplier_name, AVG(DATEDIFF(sh.arrival_date, po.expected_delivery_date)) AS avg_delay_days 
 FROM shipments sh 
 JOIN purchase_orders po ON sh.po_id = po.po_id 
 JOIN suppliers s ON po.supplier_id = s.supplier_id 
 WHERE sh.arrival_date IS NOT NULL AND sh.arrival_date > po.expected_delivery_date 
 GROUP BY s.supplier_name;
-
--- 3. Compare procurement costs between local, GCC, and international suppliers by product category. 
+```
+#### 3. Compare procurement costs between local, GCC, and international suppliers by product category. 
+``` sql
 SELECT 
     s.supplier_category,
     p.category AS product_category,
@@ -253,8 +226,9 @@ GROUP BY
     s.supplier_category, p.category
 ORDER BY 
     s.supplier_category, total_procurement_cost DESC;
-
--- 4. Show products currently below minimum stock levels across all warehouses. 
+```
+#### 4. Show products currently below minimum stock levels across all warehouses. 
+``` sql
 SELECT 
     p.product_name,
     p.category,
@@ -271,16 +245,18 @@ HAVING
     total_on_hand < p.min_stock_level
 ORDER BY 
     shortfall DESC;
-
--- 5. Calculate warehouse capacity utilization (used vs. available space) by location. 
+```
+#### 5. Calculate warehouse capacity utilization (used vs. available space) by location. 
+``` sql
 SELECT 
         w.location, w.capacity_sqft, SUM(i.quantity_on_hand) AS used_space, 
         ROUND((SUM(i.quantity_on_hand)/w.capacity_sqft)*100, 2) AS utilization_percent 
 FROM warehouses w 
 LEFT JOIN inventory i ON w.warehouse_id = i.warehouse_id 
 GROUP BY w.warehouse_id;
-
--- 6. Identify slow-moving inventory (products with no sales in last 90 days but stock > 50 units). 
+```
+#### 6. Identify slow-moving inventory (products with no sales in last 90 days but stock > 50 units). 
+``` sql
 WITH recent_sales AS (
     SELECT DISTINCT si.product_id
     FROM so_items si
@@ -308,16 +284,18 @@ WHERE
     AND ss.total_quantity > 50
 ORDER BY 
     ss.total_quantity DESC;
-
--- 7. List top 5 customers by total spend, including their preferred payment methods. 
+```
+#### 7. List top 5 customers by total spend, including their preferred payment methods. 
+``` sql
 SELECT c.customer_name, so.payment_method, SUM(so.total_amount) AS total_spent 
 FROM customers c 
 JOIN sales_orders so ON c.customer_id = so.customer_id 
 GROUP BY c.customer_id ,so.payment_method
 ORDER BY total_spent DESC 
 LIMIT 5;
-
--- 8. Analyze sales trends for construction materials before/during/after major projects (e.g., World Cup 2022). 
+```
+#### 8. Analyze sales trends for construction materials before/during/after major projects (e.g., World Cup 2022). 
+``` sql
 SELECT 
         CASE WHEN so.order_date < '2022-01-01' THEN 'Before WC' 
     WHEN so.order_date BETWEEN '2022-11-01' AND '2022-12-31' THEN 'During WC' 
@@ -328,8 +306,9 @@ JOIN sales_orders so ON soi.so_id = so.so_id
 JOIN products p ON soi.product_id = p.product_id 
 WHERE p.category = 'Construction Materials' 
 GROUP BY phase;
-
--- 10. Compare on-time delivery rates between different shipping methods. 
+```
+#### 10. Compare on-time delivery rates between different shipping methods. 
+``` sql
 SELECT 
         po.shipping_method, COUNT(*) AS total_orders, 
         SUM(CASE WHEN sh.arrival_date <= po.expected_delivery_date THEN 1 ELSE 0 END) AS on_time,
@@ -338,16 +317,18 @@ FROM purchase_orders po
 JOIN shipments sh ON po.po_id = sh.po_id 
 WHERE sh.arrival_date IS NOT NULL 
 GROUP BY po.shipping_method;
-
--- 11. Calculate average shipping costs as % of order value by supplier origin. 
+```
+#### 11. Calculate average shipping costs as % of order value by supplier origin. 
+``` sql
 SELECT s.supplier_category, ROUND(AVG(sh.shipping_cost / po.total_amount * 100), 2) AS avg_shipping_percent 
 FROM shipments sh 
 JOIN purchase_orders po ON sh.po_id = po.po_id 
 JOIN suppliers s ON po.supplier_id = s.supplier_id 
 WHERE po.total_amount > 0 
 GROUP BY s.supplier_category;
-
--- 13. Calculate inventory turnover ratio by product category (COGS / average inventory).
+```
+#### 13. Calculate inventory turnover ratio by product category (COGS / average inventory).
+``` sql
 WITH avg_costs AS (
     SELECT 
         pi.product_id,
@@ -386,8 +367,9 @@ FROM
 JOIN 
     inventory_value_by_category iv ON c.category = iv.category
 ORDER BY inventory_turnover_ratio DESC;
-
--- 14. Show monthly purchase order values vs. sales order values to identify cash flow gaps. 
+```
+#### 14. Show monthly purchase order values vs. sales order values to identify cash flow gaps. 
+``` sql
 SELECT 
     month,
     SUM(total_purchase_orders) AS total_purchase_orders,
@@ -413,8 +395,9 @@ FROM (
 ) AS combined
 GROUP BY month
 ORDER BY month;
-
--- 15. Rank products by profitability (sales price vs. procurement cost) for the last quarter. 
+```
+#### 15. Rank products by profitability (sales price vs. procurement cost) for the last quarter. 
+``` sql
 WITH recent_sales AS (
     SELECT 
         si.product_id,
@@ -452,8 +435,9 @@ JOIN avg_procurement_cost ac ON rs.product_id = ac.product_id
 JOIN products p ON rs.product_id = p.product_id
 ORDER BY profit DESC
 LIMIT 10;
-
--- 16. Predict stockouts using lead times and current demand patterns.
+```
+#### 16. Predict stockouts using lead times and current demand patterns.
+``` sql
 WITH daily_demand AS (
     SELECT 
         si.product_id,
@@ -504,8 +488,9 @@ WHERE
     likely_stockout = 'YES'
 ORDER BY 
     projected_demand_during_lead_time DESC;
-
--- 17. Optimize warehouse layouts based on product movement frequency and weight. 
+```
+#### 17. Optimize warehouse layouts based on product movement frequency and weight.
+``` sql 
 WITH movement_stats AS (
     SELECT 
         si.product_id,
@@ -543,8 +528,9 @@ FROM
     product_analysis
 ORDER BY 
     movement_qty DESC, unit_weight ASC;
-
--- 18. Analyze customs clearance bottlenecks for international shipments. 
+```
+#### 18. Analyze customs clearance bottlenecks for international shipments. 
+``` sql
 SELECT 
     sh.shipment_id,
     s.supplier_name,
@@ -566,3 +552,6 @@ JOIN
     purchase_orders po ON sh.po_id = po.po_id
 JOIN 
     suppliers s ON po.supplier_id
+```
+# Conclusion
+This supply chain database empowers operational efficiency, data-driven procurement, and inventory control by combining transactional depth with analytical flexibility. It provides visibility into logistics bottlenecks, cost drivers, and customer demand patterns — enabling smarter decisions across the entire fulfillment lifecycle.
