@@ -1,0 +1,7 @@
+supplier_category,product_category,total_procurement_cost,avg_unit_cost
+GCC,Electrical,21000.00,420.00
+Local,"Food Products",52500.00,35.00
+Local,"Construction Materials",50000.00,25.00
+Local,"Medical Supplies",44000.00,550.00
+Local,HVAC,8500.00,85.00
+Local,Beverages,7500.00,15.00

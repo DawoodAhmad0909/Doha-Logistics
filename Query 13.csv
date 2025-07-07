@@ -1,0 +1,6 @@
+category,estimated_cogs,average_inventory_value,inventory_turnover_ratio
+"Construction Materials",125000.00,53750.00,2.33
+"Medical Supplies",33000.00,66000.00,0.50
+HVAC,10625.00,23800.00,0.45
+Electrical,8400.00,147000.00,0.06
+"Food Products",875.00,26250.00,0.03
