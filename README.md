@@ -47,7 +47,7 @@ SELECT * FROM suppliers;
 ### Table:products
 ``` sql
 CREATE TABLE products( 
-        product_id          INT PRIMARY KEY AUTO_INCREMENT, 
+    product_id          INT PRIMARY KEY AUTO_INCREMENT, 
     product_name        TEXT, 
     description         TEXT, 
     category            TEXT, 
@@ -63,7 +63,7 @@ SELECT * FROM products;
 ### Table:warehouses
 ``` sql
 CREATE TABLE warehouses( 
-        warehouse_id            INT PRIMARY KEY AUTO_INCREMENT, 
+    warehouse_id            INT PRIMARY KEY AUTO_INCREMENT, 
     warehouse_name          TEXT, 
     location                TEXT, 
     capacity_sqft           INT, 
@@ -77,9 +77,9 @@ SELECT * FROM warehouses;
 ### Table:inventory
 ``` sql
 CREATE TABLE inventory( 
-        inventory_id        INT PRIMARY KEY AUTO_INCREMENT, 
-        product_id          INT,
-        warehouse_id        INT, 
+    inventory_id        INT PRIMARY KEY AUTO_INCREMENT, 
+    product_id          INT,
+    warehouse_id        INT, 
     quantity_on_hand    INT, 
     quantity_allocated  INT, 
     last_stock_update   DATETIME,
@@ -92,7 +92,7 @@ SELECT * FROM inventory;
 ### Table:purchase_orders
 ``` sql
 CREATE TABLE purchase_orders( 
-        po_id                   INT PRIMARY KEY AUTO_INCREMENT, 
+    po_id                   INT PRIMARY KEY AUTO_INCREMENT, 
     supplier_id             INT, 
     order_date              DATE, 
     expected_delivery_date  DATE, 
@@ -108,7 +108,7 @@ SELECT * FROM purchase_orders;
 ### Table:po_items
 ``` sql
 CREATE TABLE po_items( 
-        po_item_id          INT PRIMARY KEY AUTO_INCREMENT, 
+    po_item_id          INT PRIMARY KEY AUTO_INCREMENT, 
     po_id               INT, 
     product_id          INT, 
     quantity            INT, 
@@ -124,7 +124,7 @@ SELECT * FROM po_items;
 ### Table:shipments
 ``` sql
 CREATE TABLE shipments( 
-        shipment_id         INT PRIMARY KEY AUTO_INCREMENT, 
+    shipment_id         INT PRIMARY KEY AUTO_INCREMENT, 
     po_id               INT, 
     carrier_name        TEXT, 
     tracking_number     TEXT, 
@@ -140,7 +140,7 @@ SELECT * FROM shipments;
 ### Table:customers
 ``` sql
 CREATE TABLE customers( 
-        customer_id         INT PRIMARY KEY AUTO_INCREMENT, 
+    customer_id         INT PRIMARY KEY AUTO_INCREMENT, 
     customer_name       TEXT, 
     contact_person      TEXT,
     email               TEXT, 
@@ -154,7 +154,7 @@ SELECT * FROM customers;
 ### Table:sales_orders
 ``` sql
 CREATE TABLE sales_orders( 
-        so_id             INT PRIMARY KEY AUTO_INCREMENT, 
+    so_id             INT PRIMARY KEY AUTO_INCREMENT, 
     customer_id       INT, 
     order_date        DATE, 
     required_date     DATE, 
@@ -169,7 +169,7 @@ SELECT * FROM sales_orders;
 ### Table:so_items
 ``` sql
 CREATE TABLE so_items( 
-        so_item_id           INT PRIMARY KEY AUTO_INCREMENT, 
+    so_item_id           INT PRIMARY KEY AUTO_INCREMENT, 
     so_id                INT, 
     product_id           INT,
     quantity             INT,
@@ -185,7 +185,7 @@ SELECT * FROM so_items;
 ### Table:transportation
 ``` sql
 CREATE TABLE transportation( 
-        transport_id           INT PRIMARY KEY AUTO_INCREMENT, 
+    transport_id           INT PRIMARY KEY AUTO_INCREMENT, 
     vehicle_type           TEXT, 
     registration_number    TEXT, 
     capacity_kg            DECIMAL(10,2), 
@@ -314,9 +314,9 @@ JOIN sales_orders so ON c.customer_id = so.customer_id
 GROUP BY c.customer_id ,so.payment_method
 ORDER BY total_spent DESC 
 LIMIT 5;
-
+```
 #### 8. Analyze sales trends for construction materials before/during/after major projects (e.g., World Cup 2022). 
- sql
+``` sql
 SELECT 
         CASE WHEN so.order_date < '2022-01-01' THEN 'Before WC' 
     WHEN so.order_date BETWEEN '2022-11-01' AND '2022-12-31' THEN 'During WC' 
