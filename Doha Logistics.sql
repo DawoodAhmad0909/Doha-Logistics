@@ -349,7 +349,7 @@ SELECT
     s.supplier_category,
     ROUND(AVG(sh.shipping_cost), 2) AS total_shipping_cost,
     ROUND(SUM(po.total_amount), 2) AS total_po_value,
-    ROUND(AVG(sh.shipping_cost) / NULLIF(SUM(po.total_amount), 0) * 100, 2) AS shipping_cost_percentage
+    ROUND(SUM(sh.shipping_cost) / NULLIF(SUM(po.total_amount), 0) * 100, 2) AS shipping_cost_percentage
 FROM shipments sh
 JOIN purchase_orders po ON sh.po_id = po.po_id
 JOIN suppliers s ON po.supplier_id = s.supplier_id
@@ -358,28 +358,22 @@ ORDER BY shipping_cost_percentage DESC;
     
 WITH avg_costs AS (
     SELECT 
-        pi.product_id,
-        SUM(pi.quantity * pi.unit_price) / NULLIF(SUM(pi.quantity), 0) AS avg_procurement_cost
-    FROM 
-        po_items pi
+        pi.product_id,SUM(pi.quantity * pi.unit_price) / NULLIF(SUM(pi.quantity), 0) AS avg_procurement_cost
+    FROM po_items pi
     GROUP BY pi.product_id
 ),
 cogs_by_category AS (
     SELECT 
-        p.category,
-        SUM(si.quantity * ac.avg_procurement_cost) AS estimated_cogs
-    FROM 
-        so_items si
+        p.category,SUM(si.quantity * ac.avg_procurement_cost) AS estimated_cogs
+    FROM so_items si
     JOIN products p ON si.product_id = p.product_id
     JOIN avg_costs ac ON si.product_id = ac.product_id
     GROUP BY p.category
 ),
 inventory_value_by_category AS (
     SELECT 
-        p.category,
-        AVG(i.quantity_on_hand * ac.avg_procurement_cost) AS avg_inventory_value
-    FROM 
-        inventory i
+        p.category,AVG(i.quantity_on_hand * ac.avg_procurement_cost) AS avg_inventory_value
+    FROM inventory i
     JOIN products p ON i.product_id = p.product_id
     JOIN avg_costs ac ON i.product_id = ac.product_id
     GROUP BY p.category
